@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.pqz.springboot.dao.EmployeeDao" >
+
+    <select id="getAll" resultType="cn.pqz.springboot.entities.Employee">
+      select a.id,lastName,email,gender,b.departmentName d_id from employee a
+      left join(
+      select id,departmentName from department
+      )b on b.id=a.d_id
+  </select>
+    <select id="getById" parameterType="Integer" resultType="cn.pqz.springboot.entities.Employee">
+      select * from employee where id=#{id}
+  </select>
+    <delete id="deleteEmployee" parameterType="Integer">
+        delete from employee where id=#{id}
+    </delete>
+    <insert id="addEmployee" parameterType="cn.pqz.springboot.entities.Employee" useGeneratedKeys="true" keyProperty="id">
+        insert into employee(lastName,email,gender,d_id)
+        values (#{lastName},#{email},#{gender},#{d_id})
+    </insert>
+    <update id="updateEmployee" parameterType="cn.pqz.springboot.entities.Employee">
+        update employee
+        <set>
+            <if test="id!=null">
+                id=#{id},
+            </if>
+            <if test="lastName!=null">
+                lastName=#{lastName},
+            </if>
+            <if test="email!=null">
+                email=#{email},
+            </if>
+            <if test="gender!=null">
+                gender=#{gender},
+            </if>
+            <if test="d_id!=null">
+                d_id=#{d_id},
+            </if>
+        </set>
+        where id=#{id}
+    </update>
+</mapper>
